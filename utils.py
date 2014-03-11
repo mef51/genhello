@@ -21,7 +21,7 @@ def compareCommonChars(wordA, wordB):
     result += float(numUncommon) / numUniqueInWordA
 
     # The proportion of unique chars that wordA is missing from wordB
-    result += 1 - float(numUniqueInWordA) / numUniqueInWordB
+    result += 1 - float(len(commonUniqueChars)) / numUniqueInWordB
     return result * 100
 
 # Returns the sum of the differences in occurrences of characters common to both words
