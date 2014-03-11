@@ -53,8 +53,17 @@ def stringDistance(string, target="hello, world!"):
     return distance
 
 # adapted from toby seragan's book "Programming Collective Intelligence"
-# set maxIter to 0 to continue optimizing until costFun returns a 0 score
-def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp = 0.2, maxIter = 100):
+# By default, loops forever until the "perfect solution" is found:
+# until the costFun returns 0 for a member of the population.
+# Set maxIterations to a number greater than 0 to control when to stop.
+def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp = 0.2, maxIterations = 0):
+    topElite = int(eliteProp * popSize) # Number of members that survive to the next generation
+
+    population = []
+    for i in range(popSize):
+        population.append(utils.getRandomString()) # Initial population
+
+    numGenerations = 0
 
     # Mutation operation.
     # Replace the i-th index with a random char and return the result. Don't change `vector`
@@ -81,8 +90,9 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
         else:
             return r1[0:k] + r2[k:]
 
-    # an iteration of learning. Returns the best scored member of the population at the end
-    def iterate(population, topElite):
+    # Main loop
+    while True:
+        # an iteration of learning. Returns the best scored member of the population at the end
         scores = [(costFun(v), v) for v in population]
         scores.sort() # lowest scores first.
         ranked = [v for v in scores]
@@ -104,24 +114,12 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
                 c2 = random.randint(0, topElite)
                 population.append(crossover(ranked[c1][1], ranked[c2][1]))
 
-        print `scores[0][0]` + ': ' + scores[0][1] # print most fit in generation
-        return scores[0]
+        print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
 
-    population = []
-    for i in range(popSize): # populate
-        population.append(utils.getRandomString())
+        mostFit = scores[0]
+        numGenerations += 1
+        # if the mostFit got a perfect score, quit
+        if mostFit[0] == 0 or (maxIterations > 0 and numGenerations == maxIterations):
+            return mostFit
 
-    # How many survivors from each generation?
-    topElite = int(eliteProp * popSize)
-    # main loop
-    if maxIter > 0:
-        for i in range(maxIter):
-            mostFit = iterate(population, topElite)
-        return mostFit
-    else:
-        while 1:
-            mostFit = iterate(population, topElite)
-            if mostFit[0] == 0: # if the mostfit got a perfect score, quit
-                return mostFit
-
-geneticOptimize(utils.alphabet, stringDistance, popSize = 1000, maxIter = 0)
+geneticOptimize(utils.alphabet, stringDistance, popSize = 100)
