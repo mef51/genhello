@@ -123,8 +123,10 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
                 c2 = random.randint(0, topElite)
                 population.append(crossover(ranked[c1][1], ranked[c2][1]))
 
-        print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
-        # print `scores[0][0]` + ': ' + scores[0][1] # print most fit in generation
+        print `numGenerations` + ': '
+        print 'First: ' + scores[0][1]
+        print 'Mid: ' + scores[int(len(scores)/2)][1]
+        print 'Last: ' + scores[len(scores) - 1][1]
 
         mostFit = scores[0]
         numGenerations += 1
