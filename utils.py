@@ -11,10 +11,18 @@ def lengthsDifference(a, b):
 # The bigger the number the less similar they are. 0 Means they are the same
 # TODO: Need to penalize if there are missing chars, chars that *should* be common but aren't
 def compareCommonChars(wordA, wordB):
+    result = 0.0
     numUniqueInWordA = len(getUniqueElements(wordA))
+    numUniqueInWordB = len(getUniqueElements(wordB))
     commonUniqueChars = getCommonUniqueChars(wordA, wordB)
     numUncommon = numUniqueInWordA - len(commonUniqueChars)
-    return float(numUncommon) / numUniqueInWordA * 100
+
+    # The proportion of wordA that holds chars that are incorrect
+    result += float(numUncommon) / numUniqueInWordA
+
+    # The proportion of unique chars that wordA is missing from wordB
+    result += 1 - float(numUniqueInWordA) / numUniqueInWordB
+    return result * 100
 
 # Returns the sum of the differences in occurrences of characters common to both words
 # Ex. compareFrequency of "goodbye" and "hello"
