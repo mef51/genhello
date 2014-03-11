@@ -22,6 +22,8 @@ import utils
 # use an optimization algorithm to optimize your optimization algorithm?!?!
 def stringDistance(string, target="hello, world!"):
     distance = 0
+    print "*********************************"
+    print "Assessing String: " + string
 
     # ignore case for now
     string = string.lower()
@@ -49,6 +51,11 @@ def stringDistance(string, target="hello, world!"):
     distance += comCharsDistance  * comCharFactor
     distance += frequencyDistance * frequencyFactor
     distance += orderDistance     * orderFactor
+    print "Length Score: "      + `lengthDistance`
+    print "Commonality Score: " + `comCharsDistance`
+    print "Frequency Score: "   + `frequencyDistance`
+    print "Order Score: "       + `orderDistance`
+    print "Total Score: "       + `distance`
 
     return distance
 
@@ -114,12 +121,16 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
                 c2 = random.randint(0, topElite)
                 population.append(crossover(ranked[c1][1], ranked[c2][1]))
 
-        print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
+        # print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
 
         mostFit = scores[0]
         numGenerations += 1
         # if the mostFit got a perfect score, quit
         if mostFit[0] == 0 or (maxIterations > 0 and numGenerations == maxIterations):
+            print "Finished, Generations: " + `numGenerations`
             return mostFit
 
-geneticOptimize(utils.alphabet, stringDistance, popSize = 100)
+# geneticOptimize(utils.alphabet, stringDistance, popSize = 100, maxIterations = 20)
+
+stringDistance('he')
+stringDistance('hel')
