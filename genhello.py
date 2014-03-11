@@ -20,10 +20,10 @@ import utils
 # Based on how big of a number you return you could be weighting the different traits as more important than
 # others. Which makes you ask, what's the best way to weight the different traits? Could
 # use an optimization algorithm to optimize your optimization algorithm?!?!
-def stringDistance(string, target="hello, world!"):
+def stringDistance(string, target="hello"):
     distance = 0
-    print "*********************************"
-    print "Assessing String: " + string
+    # print "*********************************"
+    # print "Assessing String: " + string
 
     # ignore case for now
     string = string.lower()
@@ -52,13 +52,39 @@ def stringDistance(string, target="hello, world!"):
     distance += comCharsDistance  * comCharFactor
     distance += frequencyDistance * frequencyFactor
     distance += orderDistance     * orderFactor
-    print "Length Score: "      + `lengthDistance`
-    print "Commonality Score: " + `comCharsDistance`
-    print "Frequency Score: "   + `frequencyDistance`
-    print "Order Score: "       + `orderDistance`
-    print "Total Score: "       + `distance`
+
+    # print "Length Score: "      + `lengthDistance`
+    # print "Commonality Score: " + `comCharsDistance`
+    # print "Frequency Score: "   + `frequencyDistance`
+    # print "Order Score: "       + `orderDistance`
+    # print "Total Score: "       + `distance`
 
     return distance
+
+# Mutation operation.
+# Replace the i-th index with a random char and return the result. Don't change `vector`
+def mutate(vector):
+    i = random.randint(0, max(0, len(vector) - 1))
+    return vector[0:i] + utils.getRandomChar() + vector[i+1:]
+
+# Crossover operation. Take one part from r1 and another part from r2 and stick em together
+def crossover(r1, r2):
+    def randIndex(v): # get a random index for v, but never 0
+        return random.randint(1, max(1, len(v) - 1))
+
+    # using i and j will change the length of the result
+    i = randIndex(r1)
+    j = randIndex(r2)
+
+    # using k makes the length of the result = length of the longer string, always
+    k = min(i, j)
+
+    # We want the length to mutate occasionally (especially at the beginning)
+    # but not all the time, since it can be destructive. So we'll let the length change only half the time
+    if random.random() < 0.5:
+        return r1[0:i] + r2[j:]
+    else:
+        return r1[0:k] + r2[k:]
 
 # adapted from toby seragan's book "Programming Collective Intelligence"
 # By default, loops forever until the "perfect solution" is found:
@@ -72,31 +98,6 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
         population.append(utils.getRandomString()) # Initial population
 
     numGenerations = 0
-
-    # Mutation operation.
-    # Replace the i-th index with a random char and return the result. Don't change `vector`
-    def mutate(vector):
-        i = random.randint(0, max(0, len(vector) - 1))
-        return vector[0:i] + utils.getRandomChar() + vector[i+1:]
-
-    # Crossover operation. Take one part from r1 and another part from r2 and stick em together
-    def crossover(r1, r2):
-        def randIndex(v): # get a random index for v, but never 0
-            return random.randint(1, max(1, len(v) - 1))
-
-        # using i and j will change the length of the result
-        i = randIndex(r1)
-        j = randIndex(r2)
-
-        # using k makes the length of the result = length of the longer string, always
-        k = min(i, j)
-
-        # We want the length to mutate occasionally (especially at the beginning)
-        # but not all the time, since it can be destructive. So we'll let the length change only half the time
-        if random.random() < 0.5:
-            return r1[0:i] + r2[j:]
-        else:
-            return r1[0:k] + r2[k:]
 
     # Main loop
     while True:
@@ -122,7 +123,7 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
                 c2 = random.randint(0, topElite)
                 population.append(crossover(ranked[c1][1], ranked[c2][1]))
 
-        # print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
+        print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
 
         mostFit = scores[0]
         numGenerations += 1
@@ -131,7 +132,7 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
             print "Finished, Generations: " + `numGenerations`
             return mostFit
 
-# geneticOptimize(utils.alphabet, stringDistance, popSize = 100, maxIterations = 20)
+geneticOptimize(utils.alphabet, stringDistance, popSize = 100, maxIterations = 0)
 
-stringDistance('he')
-stringDistance('hel')
+# # stringDistance('he')
+# stringDistance('eh')
