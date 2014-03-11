@@ -53,7 +53,7 @@ def stringDistance(string, target="hello, world!"):
     return distance
 
 # adapted from toby seragan's book "Programming Collective Intelligence"
-def geneticOptimize(alphabet, costFun, popSize = 50, mutProb = 0.2, eliteProp = 0.2, maxIter = 100):
+def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp = 0.2, maxIter = 100):
 
     # Mutation operation.
     # Replace the i-th index with a random char and return the result. Don't change `vector`
@@ -89,22 +89,15 @@ def geneticOptimize(alphabet, costFun, popSize = 50, mutProb = 0.2, eliteProp = 
 
     # main loop
     for i in range(maxIter):
-        # scores = [(costFun(v), v) for v in pop]
-        scores = []
-        for v in pop:
-            try:
-                print v
-                score = costFun(v)
-            except:
-                print "index: " + `pop.index(v)`
-                raise
-            scores.append((score, v))
-
+        scores = [(costFun(v), v) for v in pop]
         scores.sort() # lowest scores first.
         ranked = [v for v in scores]
 
         # kill the weak
-        pop = ranked[0 : topElite] # lower scores are better
+        pop = []
+        for v in ranked[0 : topElite]: # lower scores are better
+            pop.append(v[1])
+
         # Add mutated and bred forms to fill the remaining population
         while len(pop) < popSize:
             if random.random() < mutProb:
@@ -117,7 +110,7 @@ def geneticOptimize(alphabet, costFun, popSize = 50, mutProb = 0.2, eliteProp = 
                 c2 = random.randint(0, topElite)
                 pop.append(crossover(ranked[c1][1], ranked[c2][1]))
 
-        # print `scores[0][0]` + ': ' + scores[0][1] # print most fit in generation
+        print `scores[0][0]` + ': ' + scores[0][1] # print most fit in generation
 
     return scores[0][1]
 
