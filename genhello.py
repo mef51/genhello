@@ -20,7 +20,7 @@ import utils
 # Based on how big of a number you return you could be weighting the different traits as more important than
 # others. Which makes you ask, what's the best way to weight the different traits? Could
 # use an optimization algorithm to optimize your optimization algorithm?!?!
-def stringDistance(string, target="hello"):
+def stringDistance(string, target="hello, world!"):
     distance = 0
     # print "*********************************"
     # print "Assessing String: " + string
@@ -124,6 +124,7 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
                 population.append(crossover(ranked[c1][1], ranked[c2][1]))
 
         print `numGenerations` + ': ' + scores[0][1] # print most fit in generation
+        # print `scores[0][0]` + ': ' + scores[0][1] # print most fit in generation
 
         mostFit = scores[0]
         numGenerations += 1
