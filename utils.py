@@ -9,11 +9,12 @@ def lengthsDifference(a, b):
 
 # Compares the common characters in a and b and returns the score of a compared to b
 # The bigger the number the less similar they are. 0 Means they are the same
-def compareCommonChars(a, b):
-    numUniqueInString = len(getUniqueElements(a))
-    commonUniqueChars = getCommonUniqueChars(a, b)
-    numUncommon = numUniqueInString - len(commonUniqueChars)
-    return float(numUncommon) / numUniqueInString * 100
+# TODO: Need to penalize if there are missing chars, chars that *should* be common but aren't
+def compareCommonChars(wordA, wordB):
+    numUniqueInWordA = len(getUniqueElements(wordA))
+    commonUniqueChars = getCommonUniqueChars(wordA, wordB)
+    numUncommon = numUniqueInWordA - len(commonUniqueChars)
+    return float(numUncommon) / numUniqueInWordA * 100
 
 # Returns the sum of the differences in occurrences of characters common to both words
 # Ex. compareFrequency of "goodbye" and "hello"

@@ -32,7 +32,8 @@ def stringDistance(string, target="hello, world!"):
     # Length. The bigger the difference in length, the worse.
     lengthDistance = utils.lengthsDifference(string, target)
 
-    # Common Chars
+    # Common Chars. The more common characters between the two, the better
+    # The score is worse if there are chars missing
     comCharsDistance = utils.compareCommonChars(string, target)
 
     # Char Frequency
