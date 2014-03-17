@@ -67,6 +67,16 @@ def mutate(vector):
     i = random.randint(0, max(0, len(vector) - 1))
     return vector[0:i] + utils.getRandomChar() + vector[i+1:]
 
+# Switch operation. picks two characters randomly and switches them
+def switch(vector):
+    i = random.randint(0, max(0, len(vector) - 1))
+    j = i
+    while j == i and len(vector) > 1:
+        j = random.randint(0, max(0, len(vector) - 1)) # make sure i and j are different spots
+    first = min(i, j)
+    second = max(i, j)
+    return vector[0:first] + vector[second] + vector[first+1:second] + vector[first] + vector[second+1:]
+
 # Crossover operation. Take one part from r1 and another part from r2 and stick em together
 def crossover(r1, r2):
     def randIndex(v): # get a random index for v, but never 0
@@ -116,23 +126,27 @@ def geneticOptimize(alphabet, costFun, popSize = 100, mutProb = 0.2, eliteProp =
             if random.random() < mutProb:
                 # mutate
                 c = random.randint(0, len(ranked) - 1) # pick a random survivor
-                population.append(mutate(ranked[c][1])) # mutate the random survivor and add to the population
+                # mutate the random survivor and add to the population. mutate half the time, switch the other
+                if random.random() < 0.5:
+                    population.append(mutate(ranked[c][1]))
+                else:
+                    population.append(switch(ranked[c][1]))
             else:
                 # crossover two random surivors
                 c1 = random.randint(0, topElite)
                 c2 = random.randint(0, topElite)
                 population.append(crossover(ranked[c1][1], ranked[c2][1]))
-
-        print `numGenerations` + ': '
-        print 'First: ' + scores[0][1]
-        print 'Mid: ' + scores[int(len(scores)/2)][1]
-        print 'Last: ' + scores[len(scores) - 1][1]
+        print `numGenerations` + ': ' + `scores[0][1]`
+        # print 'First: ' + scores[0][1]
+        # print 'Mid: ' + scores[int(len(scores)/2)][1]
+        # print 'Last: ' + scores[len(scores) - 1][1]
 
         mostFit = scores[0]
         numGenerations += 1
         # if the mostFit got a perfect score, quit
         if mostFit[0] == 0 or (maxIterations > 0 and numGenerations == maxIterations):
-            print "Finished, Generations: " + `numGenerations`
+            print "Finished! Generations: " + `numGenerations`
+            print mostFit
             return mostFit
 
 geneticOptimize(utils.alphabet, stringDistance, popSize = 100, maxIterations = 0)
